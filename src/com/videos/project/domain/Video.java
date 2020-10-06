@@ -1,7 +1,5 @@
 package com.videos.project.domain;
 
-import com.videos.project.application.VideoInterfaz;
-
 import java.util.ArrayList;
 import java.util.List;
 

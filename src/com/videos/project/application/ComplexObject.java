@@ -1,8 +1,5 @@
 package com.videos.project.application;
 
-import com.videos.project.domain.User;
-import com.videos.project.domain.Video;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

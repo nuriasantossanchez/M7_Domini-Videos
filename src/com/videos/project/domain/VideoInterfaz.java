@@ -1,6 +1,6 @@
-package com.videos.project.application;
+package com.videos.project.domain;
 
-import com.videos.project.domain.Video;
+import com.videos.project.application.ComplexObjectInterfaz;
 
 public interface VideoInterfaz extends ComplexObjectInterfaz {
     void addVideoTag(String tag);

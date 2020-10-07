@@ -1,21 +1,24 @@
 package com.videos.project.application;
 
+import com.videos.project.application.builder.Builder1;
+import com.videos.project.application.builder.ComplexObjectInterfaz;
+import com.videos.project.application.builder.Director;
+import com.videos.project.application.builder.UserInterfaz;
+
 import com.videos.project.application.command.Command1;
 import com.videos.project.application.command.Invoker;
 import com.videos.project.application.command.Receiver1;
-import com.videos.project.application.builder.Builder1;
-import com.videos.project.application.builder.Director;
+
 import com.videos.project.domain.User;
-import com.videos.project.domain.UserInterfaz;
 import com.videos.project.domain.Video;
-import com.videos.project.domain.VideoInterfaz;
+
 import com.videos.project.persistence.Repository;
 
 public class Controller {
 
     private Repository repository;
-    private UserInterfaz user;
-    private VideoInterfaz video;
+    private ComplexObjectInterfaz user;
+    private ComplexObjectInterfaz video;
     private Director director;
     private Invoker invoker;
     private static Controller instance=null;
@@ -36,16 +39,17 @@ public class Controller {
     }
 
     public void createUser(String name, String surname, String password) throws Exception {
-        this.user = (UserInterfaz) director.constructUser(name, surname, password);
+        this.user = director.constructUser(name, surname, password);
         repository.addUser((User) user);
     }
 
     public void createVideo(String url, String tittle) throws Exception {
-        this.video = (VideoInterfaz) director.constructVideo(url, tittle);
-        this.user.addVideoUser((Video) video);
+        this.video = director.constructVideo(url, tittle);
+        ((UserInterfaz)this.user).addVideoUser((Video) video);
     }
 
     public void executeOperationAddVideoTag(String tag){
+
         invoker.operationAddVideoTag(this.video,tag);
     }
 
@@ -53,12 +57,12 @@ public class Controller {
         invoker.operationShowInfo(this.user);
     }
 
-    public UserInterfaz getUser() {
+    public ComplexObjectInterfaz getUser() {
 
         return this.user;
     }
 
-    public VideoInterfaz getVideo() {
+    public ComplexObjectInterfaz getVideo() {
 
         return this.video;
     }
@@ -92,10 +96,5 @@ public class Controller {
         }
     }
 
-    //TODO: borrar
-    public void addVideoTag(String tag) {
-        this.video.addVideoTag(tag);
-
-    }
 
 }

@@ -1,6 +1,6 @@
-package com.videos.project.domain;
+package com.videos.project.application.builder;
 
-import com.videos.project.application.builder.ComplexObjectInterfaz;
+import com.videos.project.domain.Video;
 
 public interface UserInterfaz extends ComplexObjectInterfaz {
     void addVideoUser(Video video);

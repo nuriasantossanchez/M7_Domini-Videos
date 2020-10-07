@@ -1,5 +1,7 @@
 package com.videos.project.domain;
 
+import com.videos.project.application.builder.UserInterfaz;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

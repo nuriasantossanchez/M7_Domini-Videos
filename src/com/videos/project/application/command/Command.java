@@ -1,10 +1,9 @@
 package com.videos.project.application.command;
 
-import com.videos.project.domain.UserInterfaz;
-import com.videos.project.domain.VideoInterfaz;
+import com.videos.project.application.builder.ComplexObjectInterfaz;
 
 public interface Command {
-    void executeActionShowInfo(UserInterfaz user);
+    void executeActionShowInfo(ComplexObjectInterfaz user);
 
-    void executeActionAddVideoTag(VideoInterfaz video, String tag);
+    void executeActionAddVideoTag(ComplexObjectInterfaz video, String tag);
 }

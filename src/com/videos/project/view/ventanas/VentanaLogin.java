@@ -87,6 +87,7 @@ public class VentanaLogin extends JFrame implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				this.controller.executeOperationShowInfo();
+				this.setVisible(false);
 				VentanaVideos videos=new VentanaVideos(controller,controller.getUser());
 				videos.setVisible(true);
 			}

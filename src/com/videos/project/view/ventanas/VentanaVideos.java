@@ -1,10 +1,9 @@
 package com.videos.project.view.ventanas;
 
-
 import com.videos.project.application.Controller;
-import com.videos.project.domain.UserInterfaz;
+import com.videos.project.application.builder.ComplexObjectInterfaz;
+import com.videos.project.application.builder.UserInterfaz;
 import com.videos.project.domain.Video;
-import com.videos.project.domain.VideoInterfaz;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,15 +23,15 @@ public class VentanaVideos extends JFrame implements ActionListener {
     JTable videoTable;
     JScrollPane scroll;
     private Controller controller;
-    private UserInterfaz user;
+    private ComplexObjectInterfaz user;
 
-    private ArrayList<VideoInterfaz> videoList = new ArrayList<VideoInterfaz>();
+    private ArrayList<ComplexObjectInterfaz> videoList = new ArrayList<ComplexObjectInterfaz>();
 
     /**
      * constructor de la clase donde se inicializan todos los componentes de la
      * ventana de videos
      */
-    public VentanaVideos(Controller controller, UserInterfaz user) {
+    public VentanaVideos(Controller controller, ComplexObjectInterfaz user) {
         this.controller= controller;
         this.user=user;
 
@@ -45,7 +44,7 @@ public class VentanaVideos extends JFrame implements ActionListener {
         botonSalir.setText("Salir");
 
         labelTitulo = new JLabel();
-        labelTitulo.setText("Hola "+ controller.getUser().getName().toUpperCase() + ", ya puedes Crear tus Videos");
+        labelTitulo.setText("Hola "+ ((UserInterfaz)controller.getUser()).getName().toUpperCase() + ", ya puedes Crear tus Videos");
         labelTitulo.setBounds(80, 20, 300, 30);
 
         labelTabla = new JLabel();
@@ -155,10 +154,10 @@ public class VentanaVideos extends JFrame implements ActionListener {
 
     private void showInfo(){
         if(videoList.size()!=1){
-            System.out.println('\''+ controller.getUser().getName()+'\'' + " ha creado " + videoList.size() +" videos");
+            System.out.println('\''+ ((UserInterfaz)controller.getUser()).getName()+'\'' + " ha creado " + videoList.size() +" videos");
         }
         else{
-            System.out.println('\''+ controller.getUser().getName()+'\'' + " ha creado " + videoList.size() +" video");
+            System.out.println('\''+ ((UserInterfaz)controller.getUser()).getName()+'\'' + " ha creado " + videoList.size() +" video");
         }
 
     }

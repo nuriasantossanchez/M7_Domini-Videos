@@ -1,7 +1,6 @@
 package com.videos.project.application.command;
 
-import com.videos.project.domain.UserInterfaz;
-import com.videos.project.domain.VideoInterfaz;
+import com.videos.project.application.builder.ComplexObjectInterfaz;
 
 public class Invoker {
     private Command command;
@@ -11,10 +10,10 @@ public class Invoker {
         this.command = command;
     }
 
-    public void operationShowInfo(UserInterfaz user) {
+    public void operationShowInfo(ComplexObjectInterfaz user) {
         command.executeActionShowInfo(user);
     }
-    public void operationAddVideoTag(VideoInterfaz video, String tag) {
+    public void operationAddVideoTag(ComplexObjectInterfaz video, String tag) {
         command.executeActionAddVideoTag(video,tag);
     }
 }

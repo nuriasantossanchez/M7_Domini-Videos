@@ -24,9 +24,4 @@ public class Builder1 implements Builder {
 
     }
 
-    @Override
-    public ComplexObject getComplexObject() {
-
-        return complexObject;
-    }
 }

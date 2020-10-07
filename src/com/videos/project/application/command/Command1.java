@@ -1,7 +1,8 @@
 package com.videos.project.application.command;
 
-import com.videos.project.domain.UserInterfaz;
-import com.videos.project.domain.VideoInterfaz;
+import com.videos.project.application.builder.ComplexObjectInterfaz;
+import com.videos.project.application.builder.UserInterfaz;
+import com.videos.project.application.builder.VideoInterfaz;
 
 public class Command1 implements Command {
 
@@ -13,12 +14,12 @@ public class Command1 implements Command {
     }
 
     @Override
-    public void executeActionShowInfo(UserInterfaz user) {
+    public void executeActionShowInfo(ComplexObjectInterfaz user) {
         receiver1.actionShowInfo(user);
     }
 
     @Override
-    public void executeActionAddVideoTag(VideoInterfaz video, String tag) {
+    public void executeActionAddVideoTag(ComplexObjectInterfaz video, String tag) {
         receiver1.actionAddVideoTag(video,tag);
 
     }

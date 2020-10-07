@@ -18,11 +18,20 @@ public class Controller {
     private VideoInterfaz video;
     private Director director;
     private Invoker invoker;
+    private static Controller instance=null;
 
     public Controller() {
         this.repository = Repository.getInstance();
         this.director = new Director(new Builder1());
         this.invoker = new Invoker(new Command1(new Receiver1()));
+
+    }
+
+    public static Controller getInstance(){
+        if (instance==null){
+            instance=new Controller();
+        }
+        return instance;
 
     }
 
@@ -40,22 +49,43 @@ public class Controller {
         invoker.operationAddVideoTag(this.video,tag);
     }
 
-    public void executeOperationVerVideos(){
-        invoker.operationVerVideos(this.user);
+    public void executeOperationShowInfo(){
+        invoker.operationShowInfo(this.user);
     }
 
+    public UserInterfaz getUser() {
+
+        return this.user;
+    }
+
+    public VideoInterfaz getVideo() {
+
+        return this.video;
+    }
+
+    //TODO: borrar??
     public void printInfoRepository() {
         //director.printComplexObject();
         for (User user : repository.getAllUsers()) {
             System.out.println(user.toString());
-            System.out.println("\nVideos de '" + user.getName()+ '\'');
-            for (Video video : repository.getUserVideos(user)) {
-                System.out.println(video.toString());
+            if(!repository.getUserVideos(user).isEmpty()){
+                System.out.println("\nVideos de '" + user.getName()+ '\'');
+                for (Video video : repository.getUserVideos(user)) {
+                    System.out.println(video.toString());
+                }
             }
+            else{
+                System.out.println("\n'" + user.getName()+ '\''+ " aun no ha creado ningun video");
+            }
+
         }
     }
-    //TODO: borrar
+
+
+
+    //TODO: borrar??
     public void printInfoRepository(User user) {
+
         System.out.println("\nVideos de '" + user.getName()+ '\'');
         for (Video video : repository.getUserVideos(user)) {
             System.out.println(video.toString());

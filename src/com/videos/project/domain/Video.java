@@ -19,6 +19,17 @@ public class Video implements VideoInterfaz {
         this.tags.add(tag);
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public String getTittle() {
+        return tittle;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
 
     @Override
     public String toString() {

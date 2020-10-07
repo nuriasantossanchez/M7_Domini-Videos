@@ -13,8 +13,8 @@ public class Command1 implements Command {
     }
 
     @Override
-    public void executeActionVerVideos(UserInterfaz user) {
-        receiver1.actionVerVideos(user);
+    public void executeActionShowInfo(UserInterfaz user) {
+        receiver1.actionShowInfo(user);
     }
 
     @Override

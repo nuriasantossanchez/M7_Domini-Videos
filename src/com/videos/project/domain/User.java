@@ -30,22 +30,22 @@ public class User implements UserInterfaz {
 
     @Override
     public String getName() {
+
         return name;
     }
 
-    public void setVideos(List<Video> videos) {
-        this.videos = videos;
-    }
-
     public String getSurname() {
+
         return surname;
     }
 
     public String getPassword() {
+
         return password;
     }
 
     public List<Video> getVideos() {
+
         return videos;
     }
 

@@ -11,8 +11,8 @@ public class Invoker {
         this.command = command;
     }
 
-    public void operationVerVideos(UserInterfaz user) {
-        command.executeActionVerVideos(user);
+    public void operationShowInfo(UserInterfaz user) {
+        command.executeActionShowInfo(user);
     }
     public void operationAddVideoTag(VideoInterfaz video, String tag) {
         command.executeActionAddVideoTag(video,tag);

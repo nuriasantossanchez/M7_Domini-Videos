@@ -8,13 +8,18 @@ import com.videos.project.persistence.Repository;
 
 public class Receiver1 {
 
-    private Repository repository=Repository.getInstance();
+    private Repository repository = Repository.getInstance();
 
 
-    public void actionVerVideos(UserInterfaz user) {
-        System.out.println("\nVideos de '" + user.getName()+ '\'');
-        for (Video video : repository.getUserVideos((User) user)) {
-            System.out.println(video.toString());
+    public void actionShowInfo(UserInterfaz user) {
+        System.out.println(user.toString());
+        if (!repository.getUserVideos((User) user).isEmpty()) {
+            System.out.println("\nVideos de '" + user.getName() + '\'');
+            for (Video video : repository.getUserVideos((User) user)) {
+                System.out.println(video.toString());
+            }
+        } else {
+            System.out.println("\n'" + user.getName() + '\'' + "aun no ha creado ningun video");
         }
     }
 

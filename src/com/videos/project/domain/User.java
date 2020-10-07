@@ -24,35 +24,25 @@ public class User implements UserInterfaz {
 
     @Override
     public void addVideoUser(Video video) {
+
         this.videos.add(video);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public void setVideos(List<Video> videos) {
         this.videos = videos;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getSurname() {
         return surname;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public List<Video> getVideos() {
@@ -66,7 +56,6 @@ public class User implements UserInterfaz {
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
                 ", registrationDate='" + registrationDate + '\'' +
-                ", videos=" + videos +
                 '}';
     }
 }

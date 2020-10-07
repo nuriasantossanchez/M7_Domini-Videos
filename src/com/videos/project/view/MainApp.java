@@ -1,7 +1,6 @@
 package com.videos.project.view;
 
 import com.videos.project.application.Controller;
-import com.videos.project.domain.User;
 
 public class MainApp {
 
@@ -16,12 +15,16 @@ public class MainApp {
 
         controller.createUser("aa","bb","12f");
         controller.createVideo("url1","title1");
-        controller.addVideoTag(tag1);
-        controller.addVideoTag(tag2);
+        //controller.addVideoTag(tag1);
+        //controller.addVideoTag(tag2);
+        controller.executeOperationAddVideoTag(tag1);
+        controller.executeOperationAddVideoTag(tag2);
 
         controller.createVideo("url2","title2");
-        controller.addVideoTag(tag3);
-        controller.addVideoTag(tag4);
+        //controller.addVideoTag(tag3);
+        //controller.addVideoTag(tag4);
+        controller.executeOperationAddVideoTag(tag3);
+        controller.executeOperationAddVideoTag(tag4);
 
 
         controller.createVideo("url3","title3");
@@ -29,11 +32,13 @@ public class MainApp {
 
         controller.createUser("2","2","22");
         controller.createVideo("url2222","title222");
-        controller.addVideoTag("mi tag video");
+        //controller.addVideoTag("mi tag video");
+        controller.executeOperationAddVideoTag("mi tag video");
 
-        controller.printInfo();
+        controller.printInfoRepository();
 
-        controller.printInfo(new User("2","2","22"));
+        //controller.printInfoVideos(new User("2","2","22"));
+        controller.executeOperationVerVideos();
 
 
 

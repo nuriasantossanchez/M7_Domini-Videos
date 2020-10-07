@@ -15,6 +15,7 @@ public class Video implements VideoInterfaz {
 
     @Override
     public void addVideoTag(String tag) {
+
         this.tags.add(tag);
     }
 

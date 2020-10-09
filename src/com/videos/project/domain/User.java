@@ -1,6 +1,6 @@
 package com.videos.project.domain;
 
-import com.videos.project.application.builder.UserInterfaz;
+import com.videos.project.application.builder.UserInterface;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class User implements UserInterfaz {
+public class User implements UserInterface {
 
     private String name;
     private String surname;

@@ -1,8 +1,8 @@
 package com.videos.project.view.ventanas;
 
 import com.videos.project.application.Controller;
-import com.videos.project.application.builder.ComplexObjectInterfaz;
-import com.videos.project.application.builder.UserInterfaz;
+import com.videos.project.application.builder.WrapperObjectInterface;
+import com.videos.project.application.builder.UserInterface;
 import com.videos.project.domain.Video;
 
 import javax.swing.*;
@@ -13,6 +13,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+/**
+ * Clase de la capa View
+ *
+ * Muestra un formulario para la creacion de Videos asociados a un usuario
+ * Muestra la info de cada nuevo video en un componente JTable
+ *
+ * El formulario no permite campos vacios
+ */
 public class VentanaVideos extends JFrame implements ActionListener {
 
     private JLabel labelTitulo, labelTabla;
@@ -20,36 +28,43 @@ public class VentanaVideos extends JFrame implements ActionListener {
     private JLabel linkTags;
     private JLabel url, tittle;
     private JButton botonCrearVideo, botonSalir;
-    JTable videoTable;
-    JScrollPane scroll;
+    JTable videosJTable;
+    JScrollPane scrollTabla;
     private Controller controller;
-    private ComplexObjectInterfaz user;
 
-    private ArrayList<ComplexObjectInterfaz> videoList = new ArrayList<ComplexObjectInterfaz>();
+    private ArrayList<WrapperObjectInterface> videoList = new ArrayList<WrapperObjectInterface>();
 
     /**
      * constructor de la clase donde se inicializan todos los componentes de la
-     * ventana de videos
+     * ventana de Videos
      */
-    public VentanaVideos(Controller controller, ComplexObjectInterfaz user) {
+    public VentanaVideos(Controller controller, WrapperObjectInterface user) {
         this.controller= controller;
-        this.user=user;
 
         botonCrearVideo = new JButton();
         botonCrearVideo.setBounds(90, 220, 140, 30);
         botonCrearVideo.setText("Crear Video");
+        add(botonCrearVideo);
 
         botonSalir = new JButton();
         botonSalir.setBounds(240, 220, 100, 30);
         botonSalir.setText("Salir");
+        add(botonSalir);
 
         labelTitulo = new JLabel();
-        labelTitulo.setText("Hola "+ ((UserInterfaz)controller.getUser()).getName().toUpperCase() + ", ya puedes Crear tus Videos");
-        labelTitulo.setBounds(80, 20, 300, 30);
+        labelTitulo.setText("<html>Hola "+ ((UserInterface)controller.getUser()).getName().toUpperCase()
+                            + " !<br/>Ya puedes Crear tus Videos</html>");
+        labelTitulo.setBounds(120, 20, 300, 50);
+        add(labelTitulo);
 
         labelTabla = new JLabel();
         labelTabla.setText("MIS VIDEOS");
-        labelTabla.setBounds(40, 250, 380, 50);
+        labelTabla.setBounds(40, 270, 380, 30);
+        add(labelTabla);
+
+        scrollTabla = new JScrollPane();
+        scrollTabla.setBounds(40, 300, 400, 130);
+        add(scrollTabla);
 
         url = new JLabel();
         url.setText("URL");
@@ -62,10 +77,12 @@ public class VentanaVideos extends JFrame implements ActionListener {
         add(tittle);
 
         linkTags = new JLabel();
-        linkTags.setText("Crea tus Tags");
-        linkTags.setBounds(50, 180, 100, 30);
+        linkTags.setText("<HTML><U>Crea tus Tags</U></HTML>");
+        linkTags.setBounds(50, 170, 100, 30);
+        linkTags.setFont(new java.awt.Font("Verdana", Font.ITALIC, 14));
         linkTags.setForeground(Color.BLUE.darker());
         linkTags.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        linkTags.setVisible(false);
         add(linkTags);
 
         textUrl = new JTextField();
@@ -76,32 +93,33 @@ public class VentanaVideos extends JFrame implements ActionListener {
         textTittle.setBounds(120, 130, 250, 30);
         add(textTittle);
 
-
         botonCrearVideo.addActionListener(this);
         botonSalir.addActionListener(this);
 
+        /**
+         * Añade el evento MouseListener a la JLabel linkTags, que es tratada como un link
+         *
+         * Al clickar el link, se muestra recursivamente un InputDialog para crear tags
+         * que se van añadiendo al video recien creado por el usuario
+         *
+         */
         linkTags.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // the user clicks on the label
+                String tag = JOptionPane.showInputDialog(null, "Crea un tag para tu video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);;
+                while(null!=tag) {
+                    controller.executeOperationAddVideoTag(tag);
+                    mostrarVideos();
+                    tag = JOptionPane.showInputDialog(null, "Crea un tag mas para tu video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);
+                }
+                linkTags.setVisible(false);
             }
 
         });
 
-        scroll = new JScrollPane();
-        scroll.setBounds(40, 300, 400, 130);
-        try {
-            mostrarVideos();// muestra la tabla de videos del usuario
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        add(botonSalir);
-        add(botonCrearVideo);
-        add(labelTitulo);
-        add(labelTabla);
-        add(scroll);
+        mostrarVideos();
         limpiar();
+
         setSize(480, 650);
         setTitle("CREA TUS VIDEOS");
         setLocationRelativeTo(null);
@@ -111,27 +129,28 @@ public class VentanaVideos extends JFrame implements ActionListener {
     }
 
     /**
-     * Permite el llenado de la tabla1 usando sin utilizar el table model, para
-     * esto usamos logica de programacion por medio de la captura de informacion
-     * en una lista y luego en una matriz para llenar la tabla
+     * Permite el llenado de un JTable con la info de los videos que va creando el usuario
+     *
      */
-    public void mostrarVideos() throws Exception {
+    public void mostrarVideos(){
 
         String titulos[] = {"URL", "Titulo", "Tags"};
-        String informacion[][] = obtieneMariz();// obtenemos la informacion de la matriz
+        String informacion[][] = obtieneMarizVideos();// obtenemos la informacion de la matriz
 
-        videoTable = new JTable(informacion, titulos);
-        videoTable.setEnabled(false);
-        videoTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        scroll.setViewportView(videoTable);
+        videosJTable = new JTable(informacion, titulos);
+        videosJTable.setEnabled(false);
+        videosJTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        scrollTabla.setViewportView(videosJTable);
     }
 
     /**
-     * Metodo que permite retornar la matriz con informacion de los videos del usuario
+     * Metodo que retorna una matriz con la info de los videos creados por el usuario
+     * Esta matriz se genera a partir de un listado que almacena objetos/implementaciones
+     * de tipo ComplexObjectInterfaz, en este caso, un listado de objetos tipo Video
      *
      * @return
      */
-    private String[][] obtieneMariz() throws Exception {
+    private String[][] obtieneMarizVideos(){
 
         String informacion[][] = new String[videoList.size()][3];
 
@@ -152,41 +171,64 @@ public class VentanaVideos extends JFrame implements ActionListener {
         textTittle.setText("");
     }
 
-    private void showInfo(){
+    /**
+     * Muestra por consola el total de videos creados por un usuario, cada vez que un nuevo video es creado
+     */
+    private void showConsoleInfo(){
         if(videoList.size()!=1){
-            System.out.println('\''+ ((UserInterfaz)controller.getUser()).getName()+'\'' + " ha creado " + videoList.size() +" videos");
+            System.out.println('\''+ ((UserInterface)controller.getUser()).getName()+'\'' + " ha creado "
+                    + videoList.size() +" videos");
         }
         else{
-            System.out.println('\''+ ((UserInterfaz)controller.getUser()).getName()+'\'' + " ha creado " + videoList.size() +" video");
+            System.out.println('\''+ ((UserInterface)controller.getUser()).getName()+'\'' + " ha creado "
+                    + videoList.size() +" video");
         }
-
     }
 
+    /**
+     * Realiza la accion de crear un video o salir de la aplicacion, en funcion del evento de usuario capturado
+     *
+     * La creacion de un video permite la creacion opcional de tags para ese video
+     *
+     * Cada vez que se crea un video, se añade a un listado de videos que alimenta y actualiza
+     * el componente JTable con la info de los videos creados
+     *
+     * El formulario de creacion de un video no permite campos vacios
+     *
+     * @param e, evento generado por la accion click del usuario sobre el componente JButton
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == botonCrearVideo) {
-
             try {
+                if (textUrl.getText().trim().isEmpty() || textTittle.getText().trim().isEmpty()) {
+                    throw new EntradaDeDatosEnBlancoException("Campos Vacios No Permitidos");
+                }
                 controller.createVideo(textUrl.getText(),textTittle.getText());
                 videoList.add(controller.getVideo());
-                showInfo();
-            } catch (Exception ex) {
+                showConsoleInfo();
+                linkTags.setVisible(true);
+            }catch (EntradaDeDatosEnBlancoException ex) {
+                JOptionPane.showMessageDialog(null,
+                        "Rellene Todos los Datos, por favor", "Campos Vacios No Permitidos",
+                        JOptionPane.WARNING_MESSAGE);
+            }catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,
                         "Error en la Entrada de Datos", "Error",
                         JOptionPane.ERROR_MESSAGE);
             } finally {
-                /* Actualizamos la tabla despues de añadir cada video */
-                try {
+                if(null!=controller.getVideo()) {
+                    /**
+                     * Se actualiza la JTable que contiene la info de los videos,
+                     * cada vez que el usuario crea un nuevo video
+                     */
                     mostrarVideos();
-
-                } catch (Exception exception) {
-                    exception.printStackTrace();
+                    limpiar();
                 }
-                limpiar();
             }
         }
         if (e.getSource() == botonSalir) {
-            this.controller.executeOperationShowInfo();
+            controller.executeOperationShowInfo();
             System.exit(0);
         }
     }

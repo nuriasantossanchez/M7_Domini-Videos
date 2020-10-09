@@ -6,6 +6,12 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Clase de la capa View
+ *
+ * Muestra un formulario de Login que permite la creacion de un Usuario
+ * El formulario no permite campos vacios
+ */
 public class VentanaLogin extends JFrame implements ActionListener {
 
 	private JLabel labelTitulo;
@@ -16,7 +22,7 @@ public class VentanaLogin extends JFrame implements ActionListener {
 
 	/**
 	 * Constructor de la clase donde se inicializan todos los componentes de la
-	 * ventana de login
+	 * ventana de Login
 	 */
 	public VentanaLogin(Controller controller) {
 		this.controller= controller;
@@ -24,14 +30,17 @@ public class VentanaLogin extends JFrame implements ActionListener {
 		botonLogin = new JButton();
 		botonLogin.setBounds(90, 250, 100, 30);
 		botonLogin.setText("Login");
+		add(botonLogin);
 
 		botonExit = new JButton();
 		botonExit.setBounds(200, 250, 100, 30);
 		botonExit.setText("Salir");
+		add(botonExit);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("LOGATE PARA ACCEDER A TUS VIDEOS");
 		labelTitulo.setBounds(80, 20, 300, 30);
+		add(labelTitulo);
 
 		name = new JLabel();
 		name.setText("Nombre");
@@ -63,10 +72,6 @@ public class VentanaLogin extends JFrame implements ActionListener {
 		botonLogin.addActionListener(this);
 		botonExit.addActionListener(this);
 
-		add(botonExit);
-		add(botonLogin);
-		add(labelTitulo);
-
 		setSize(380, 380);
 		setTitle("USER LOGIN");
 		setLocationRelativeTo(null);
@@ -75,21 +80,43 @@ public class VentanaLogin extends JFrame implements ActionListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
+	/**
+	 * Realiza la accion de crear un usuario o salir de la aplicacion, en funcion
+	 * del evento de ususario capturado
+	 *
+	 * El formulario de creacion de un usuario no permite campos vacios
+	 *
+	 * Una vez creado un usuario se muestra por consola la info del usuario, se oculta
+	 * la ventana con el formulario de Login y se muestra la ventana de creacion
+	 * de Videos para ese usuario
+	 *
+	 * @param e, evento generado por la accion click del usuario sobre el componente JButton
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == botonLogin) {
 			try {
+				if (textName.getText().trim().isEmpty() || textSurname.getText().trim().isEmpty()
+						|| textPassword.getText().trim().isEmpty()) {
+					throw new EntradaDeDatosEnBlancoException("Campos Vacios No Permitidos");
+				}
 				controller.createUser(textName.getText(),textSurname.getText(),textPassword.getText());
-			} catch (Exception ex) {
+			}catch (EntradaDeDatosEnBlancoException ex) {
+				JOptionPane.showMessageDialog(null,
+						"Rellene Todos los Datos, por favor", "Campos Vacios No Permitidos",
+						JOptionPane.WARNING_MESSAGE);
+			}catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
 						"Error en la Entrada de Datos", "Error",
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
-				this.controller.executeOperationShowInfo();
-				this.setVisible(false);
-				VentanaVideos videos=new VentanaVideos(controller,controller.getUser());
-				videos.setVisible(true);
+				if(null!=controller.getUser()) {
+					this.controller.executeOperationShowInfo();
+					this.setVisible(false);
+					VentanaVideos videos = new VentanaVideos(controller, controller.getUser());
+					videos.setVisible(true);
+				}
 			}
 		}
 		if (e.getSource() == botonExit) {

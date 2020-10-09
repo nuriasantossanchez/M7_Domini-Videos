@@ -1,11 +1,11 @@
 package com.videos.project.domain;
 
-import com.videos.project.application.builder.VideoInterfaz;
+import com.videos.project.application.builder.VideoInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Video implements VideoInterfaz {
+public class Video implements VideoInterface {
     private String url;
     private String tittle;
     private List<String> tags = new ArrayList<>();

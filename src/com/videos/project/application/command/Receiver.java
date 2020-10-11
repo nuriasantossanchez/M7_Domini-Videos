@@ -1,7 +1,6 @@
 package com.videos.project.application.command;
 
-import com.videos.project.application.builder.VideoInterface;
-import com.videos.project.application.builder.WrapperObjectInterface;
+import com.videos.project.application.Controller;
 import com.videos.project.domain.User;
 import com.videos.project.domain.Video;
 import com.videos.project.persistence.Repository;
@@ -15,6 +14,15 @@ import com.videos.project.persistence.Repository;
 public class Receiver {
 
     private Repository repository = Repository.getInstance();
+    private Controller controller;
+
+    private int numberOfVideos;
+
+
+    public Receiver(Controller controller){
+        this.controller=controller;
+
+    }
 
     /**
      * Accede a un usuario del Repository y muestra la info de ese usuario y sus videos asociados
@@ -24,30 +32,49 @@ public class Receiver {
      *              en este caso, objeto de tipo User, que implementa la interface
      *              UserInterface que extiende a WrapperObjectInterface
      */
-    public void actionShowInfo(WrapperObjectInterface user) {
+    public void showInfoVideos(User user) {
         System.out.println(user.toString());
-        if (!repository.getUserVideos((User) user).isEmpty()) {
-            System.out.println("\nVideos de '" + ((User) user).getName() + '\'');
-            for (Video video : repository.getUserVideos((User) user)) {
+        if (!this.repository.getUserVideos(user).isEmpty()) {
+            System.out.println("\nVideos de '" + (user).getName() + '\'');
+            for (Video video : this.repository.getUserVideos(user)) {
                 System.out.println(video.toString());
             }
+
         } else {
-            System.out.println("\n'" + ((User) user).getName() + '\'' + "aun no ha creado ningun video");
+            getNumberOfVideos();
         }
     }
 
     /**
      * Añade una etiqueta a un video determinado
-     *
-     * @param video, cualquier objeto que implemente la interface WrapperObjectInterface
+     *  @param video, cualquier objeto que implemente la interface WrapperObjectInterface
      *               o cualquier otra interface que extienda a WrapperObjectInterface,
      *               en este caso, objeto de tipo Video, que implementa la interface
      *               VideoInterface que extiende a WrapperObjectInterface
      *
      * @param tag String que representa una etiqueta que sera añadida a un video en concreto
      */
-    public void actionAddVideoTag(WrapperObjectInterface video, String tag) {
+    public void addTagVideo(String tag, Video video) {
+        video.addTag(tag);
+    }
 
-        ((VideoInterface)video).addVideoTag(tag);
+    public void addUserVideo(Video video, User user) {
+        user.addVideo(video);
+        numberOfVideos++;
+
+    }
+
+    public void getNumberOfVideos() {
+        if(numberOfVideos==0){
+            System.out.println("\n'" + controller.getUser().getName() + '\'' + " aun no ha creado ningun video");
+        }
+        else if(numberOfVideos==1){
+            System.out.println('\''+ controller.getUser().getName()+'\'' + " ha creado "
+                    + numberOfVideos +" video");
+        }
+        else{
+            System.out.println('\''+ controller.getUser().getName()+'\'' + " ha creado "
+                    + numberOfVideos +" videos");
+        }
     }
 }

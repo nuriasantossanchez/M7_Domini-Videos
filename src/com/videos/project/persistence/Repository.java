@@ -50,5 +50,27 @@ public class Repository {
 
         return userVideos;
     }
+
+    public boolean isUserVideoRepited(User user, String url, String tittle) {
+        boolean videoRepeted=false;
+        for (Video vdo: getUserVideos(user)){
+            if(vdo.getUrl().equals(url) && vdo.getTittle().equals(tittle)){
+                videoRepeted=true;
+                break;
+            }
+        }
+        return videoRepeted;
+    }
+
+    public Video getVideo(User user,String url, String tittle){
+        Video video=null;
+        for (Video vdo: getUserVideos(user)){
+            if(vdo.getUrl().equals(url) && vdo.getTittle().equals(tittle)){
+                video=vdo;
+                break;
+            }
+        }
+        return video;
+    }
 }
 

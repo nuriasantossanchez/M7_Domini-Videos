@@ -1,6 +1,7 @@
 package com.videos.project.application.command;
 
-import com.videos.project.application.builder.WrapperObjectInterface;
+import com.videos.project.domain.User;
+import com.videos.project.domain.Video;
 
 /**
  *  Clase de la capa Application, utilizada para implementar el patron Command
@@ -35,9 +36,9 @@ public class Invoker {
      *              o cualquier otra interface que extienda a WrapperObjectInterface,
      *              en este caso, objeto de tipo User
      */
-    public void operationShowInfo(WrapperObjectInterface user) {
+    public void showInfoVideos(User user) {
 
-        command.executeActionShowInfo(user);
+        command.showInfoVideos(user);
     }
 
     /**
@@ -53,7 +54,15 @@ public class Invoker {
      *
      * @param tag String que representa una etiqueta que sera añadida a un video en concreto
      */
-    public void operationAddVideoTag(WrapperObjectInterface video, String tag) {
-        command.executeActionAddVideoTag(video,tag);
+    public void addTagVideo(Video video, String tag) {
+        command.addTagVideo(tag, video);
+    }
+
+    public void addUserVideo(Video video, User user){
+        command.addUserVideo(video, user);
+    }
+
+    public void getNumberOfVideos() {
+        command.getNumberOfVideos();
     }
 }

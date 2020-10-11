@@ -1,11 +1,11 @@
 package com.videos.project.view.ventanas;
 
 import com.videos.project.application.Controller;
-import com.videos.project.application.builder.WrapperObjectInterface;
-import com.videos.project.application.builder.UserInterface;
+import com.videos.project.domain.User;
 import com.videos.project.domain.Video;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,10 +15,10 @@ import java.util.ArrayList;
 
 /**
  * Clase de la capa View
- *
+ * <p>
  * Muestra un formulario para la creacion de Videos asociados a un usuario
  * Muestra la info de cada nuevo video en un componente JTable
- *
+ * <p>
  * El formulario no permite campos vacios
  */
 public class VentanaVideos extends JFrame implements ActionListener {
@@ -32,14 +32,14 @@ public class VentanaVideos extends JFrame implements ActionListener {
     JScrollPane scrollTabla;
     private Controller controller;
 
-    private ArrayList<WrapperObjectInterface> videoList = new ArrayList<WrapperObjectInterface>();
+    private ArrayList<Video> videoList = new ArrayList<Video>();
 
     /**
      * constructor de la clase donde se inicializan todos los componentes de la
      * ventana de Videos
      */
-    public VentanaVideos(Controller controller, WrapperObjectInterface user) {
-        this.controller= controller;
+    public VentanaVideos(Controller controller, User user) {
+        this.controller = controller;
 
         botonCrearVideo = new JButton();
         botonCrearVideo.setBounds(90, 220, 140, 30);
@@ -52,8 +52,8 @@ public class VentanaVideos extends JFrame implements ActionListener {
         add(botonSalir);
 
         labelTitulo = new JLabel();
-        labelTitulo.setText("<html>Hola "+ ((UserInterface)controller.getUser()).getName().toUpperCase()
-                            + " !<br/>Ya puedes Crear tus Videos</html>");
+        labelTitulo.setText("<html>Hola " + (controller.getUser()).getName().toUpperCase()
+                + " !<br/>Ya puedes Crear tus Videos</html>");
         labelTitulo.setBounds(120, 20, 300, 50);
         add(labelTitulo);
 
@@ -106,13 +106,13 @@ public class VentanaVideos extends JFrame implements ActionListener {
         linkTags.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                String tag = JOptionPane.showInputDialog(null, "Crea un tag para tu video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);;
-                while(null!=tag) {
-                    controller.executeOperationAddVideoTag(tag);
-                    mostrarVideos();
-                    tag = JOptionPane.showInputDialog(null, "Crea un tag mas para tu video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);
+                try {
+                    showInputDialogAddTag(controller,controller.getVideo().getUrl(),controller.getVideo().getTittle());
+                } catch (EntradaDeDatosEnBlancoException entradaDeDatosEnBlancoException) {
+                    JOptionPane.showMessageDialog(null,
+                            "Rellene los Datos Solicitados, por favor", "Campos Vacios No Permitidos",
+                            JOptionPane.WARNING_MESSAGE);
                 }
-                linkTags.setVisible(false);
             }
 
         });
@@ -130,17 +130,48 @@ public class VentanaVideos extends JFrame implements ActionListener {
 
     /**
      * Permite el llenado de un JTable con la info de los videos que va creando el usuario
-     *
      */
-    public void mostrarVideos(){
+    public void mostrarVideos() {
 
         String titulos[] = {"URL", "Titulo", "Tags"};
         String informacion[][] = obtieneMarizVideos();// obtenemos la informacion de la matriz
 
         videosJTable = new JTable(informacion, titulos);
-        videosJTable.setEnabled(false);
+        videosJTable.setEnabled(true);
         videosJTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         scrollTabla.setViewportView(videosJTable);
+
+        videosJTable.addMouseListener(new java.awt.event.MouseAdapter() {
+
+          public void mouseClicked(java.awt.event.MouseEvent e) {
+
+              videosJTable.getModel();
+              String url = (String) videosJTable.getModel().getValueAt(videosJTable.getSelectedRow(), 0);
+              String tittle = (String) videosJTable.getModel().getValueAt(videosJTable.getSelectedRow(), 1);
+              try {
+                  showInputDialogAddTag(Controller.getInstance(),url,tittle);
+              } catch (EntradaDeDatosEnBlancoException entradaDeDatosEnBlancoException) {
+                  JOptionPane.showMessageDialog(null,
+                          "Rellene los Datos Solicitados, por favor", "Campos Vacios No Permitidos",
+                          JOptionPane.WARNING_MESSAGE);
+              }
+          }
+      });
+
+}
+
+    private void showInputDialogAddTag(Controller controller, String url, String tittle) throws EntradaDeDatosEnBlancoException {
+        String tag = JOptionPane.showInputDialog(null, "Crea un Tag para tu Video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);
+
+        while (null != tag) {
+            if (tag.trim().isEmpty()) {
+                throw new EntradaDeDatosEnBlancoException("Campos Vacios No Permitidos");
+            }
+            controller.addTagVideo(tag,controller.getVideo(controller.getUser(),url,tittle));
+            mostrarVideos();
+            tag = JOptionPane.showInputDialog(null, "Crea un Tag Mas para tu Video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);
+        }
+        linkTags.setVisible(false);
     }
 
     /**
@@ -150,7 +181,7 @@ public class VentanaVideos extends JFrame implements ActionListener {
      *
      * @return
      */
-    private String[][] obtieneMarizVideos(){
+    private String[][] obtieneMarizVideos() {
 
         String informacion[][] = new String[videoList.size()][3];
 
@@ -172,27 +203,13 @@ public class VentanaVideos extends JFrame implements ActionListener {
     }
 
     /**
-     * Muestra por consola el total de videos creados por un usuario, cada vez que un nuevo video es creado
-     */
-    private void showConsoleInfo(){
-        if(videoList.size()!=1){
-            System.out.println('\''+ ((UserInterface)controller.getUser()).getName()+'\'' + " ha creado "
-                    + videoList.size() +" videos");
-        }
-        else{
-            System.out.println('\''+ ((UserInterface)controller.getUser()).getName()+'\'' + " ha creado "
-                    + videoList.size() +" video");
-        }
-    }
-
-    /**
      * Realiza la accion de crear un video o salir de la aplicacion, en funcion del evento de usuario capturado
-     *
+     * <p>
      * La creacion de un video permite la creacion opcional de tags para ese video
-     *
+     * <p>
      * Cada vez que se crea un video, se añade a un listado de videos que alimenta y actualiza
      * el componente JTable con la info de los videos creados
-     *
+     * <p>
      * El formulario de creacion de un video no permite campos vacios
      *
      * @param e, evento generado por la accion click del usuario sobre el componente JButton
@@ -204,20 +221,26 @@ public class VentanaVideos extends JFrame implements ActionListener {
                 if (textUrl.getText().trim().isEmpty() || textTittle.getText().trim().isEmpty()) {
                     throw new EntradaDeDatosEnBlancoException("Campos Vacios No Permitidos");
                 }
-                controller.createVideo(textUrl.getText(),textTittle.getText());
-                videoList.add(controller.getVideo());
-                showConsoleInfo();
-                linkTags.setVisible(true);
-            }catch (EntradaDeDatosEnBlancoException ex) {
+                if (!controller.createVideo(textUrl.getText(), textTittle.getText())) {
+                    JOptionPane.showMessageDialog(null,
+                            "El Video que Quiere Crear ya Existe", "Video Repetido",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    videoList.add(controller.getVideo());
+                    controller.getNumberOfVideos();
+                    linkTags.setVisible(true);
+                }
+
+            } catch (EntradaDeDatosEnBlancoException ex) {
                 JOptionPane.showMessageDialog(null,
-                        "Rellene Todos los Datos, por favor", "Campos Vacios No Permitidos",
+                        "Rellene los Datos Solicitados, por favor", "Campos Vacios No Permitidos",
                         JOptionPane.WARNING_MESSAGE);
-            }catch (Exception ex) {
+            } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null,
                         "Error en la Entrada de Datos", "Error",
                         JOptionPane.ERROR_MESSAGE);
             } finally {
-                if(null!=controller.getVideo()) {
+                if (null != controller.getVideo()) {
                     /**
                      * Se actualiza la JTable que contiene la info de los videos,
                      * cada vez que el usuario crea un nuevo video
@@ -228,7 +251,7 @@ public class VentanaVideos extends JFrame implements ActionListener {
             }
         }
         if (e.getSource() == botonSalir) {
-            controller.executeOperationShowInfo();
+            controller.showInfoVideos();
             System.exit(0);
         }
     }

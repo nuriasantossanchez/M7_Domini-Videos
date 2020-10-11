@@ -1,6 +1,7 @@
 package com.videos.project.application.command;
 
-import com.videos.project.application.builder.WrapperObjectInterface;
+import com.videos.project.domain.User;
+import com.videos.project.domain.Video;
 
 /**
  * Interface de la capa Application, utilizada para implementar el patron Command
@@ -13,7 +14,12 @@ import com.videos.project.application.builder.WrapperObjectInterface;
  *
  */
 public interface Command {
-    void executeActionShowInfo(WrapperObjectInterface user);
+    void showInfoVideos(User user);
 
-    void executeActionAddVideoTag(WrapperObjectInterface video, String tag);
+    void addTagVideo(String tag, Video video);
+
+    void addUserVideo(Video video, User user);
+
+    void getNumberOfVideos();
+
 }

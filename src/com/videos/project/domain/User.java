@@ -1,14 +1,12 @@
 package com.videos.project.domain;
 
-import com.videos.project.application.builder.UserInterface;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class User implements UserInterface {
+public class User {
 
     private String name;
     private String surname;
@@ -24,31 +22,29 @@ public class User implements UserInterface {
         this.registrationDate=formatDate.format(new Date());
     }
 
-    @Override
-    public void addVideoUser(Video video) {
+    public void addVideo(Video video) {
 
         this.videos.add(video);
     }
 
-    @Override
     public String getName() {
 
-        return name;
+        return this.name;
     }
 
     public String getSurname() {
 
-        return surname;
+        return this.surname;
     }
 
     public String getPassword() {
 
-        return password;
+        return this.password;
     }
 
     public List<Video> getVideos() {
 
-        return videos;
+        return this.videos;
     }
 
     @Override

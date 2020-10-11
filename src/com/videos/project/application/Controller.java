@@ -1,9 +1,7 @@
 package com.videos.project.application;
 
-import com.videos.project.application.builder.Builder1;
-import com.videos.project.application.builder.WrapperObjectInterface;
-import com.videos.project.application.builder.Director;
-import com.videos.project.application.builder.UserInterface;
+import com.videos.project.application.abstractfactory.AbstractFactory;
+import com.videos.project.application.abstractfactory.Factory;
 
 import com.videos.project.application.command.Command1;
 import com.videos.project.application.command.Invoker;
@@ -17,34 +15,32 @@ import com.videos.project.persistence.Repository;
 /**
  * Clase de la capa Application
  *
- * Implementa el patron Singleton, y hace uso del patron Builder para la
- * creacion de objetos de la capa de Dominio y del patron Command para
- * ejecutar ciertas peticiones, como mostrar la info de un usuario y
- * sus videos asociados o añadir etiquetas a un video determinado
+ * Implementa el patron Singleton
+ * Hace uso del patron AbstractFactory para la creacion de objetos de la capa de Dominio
+ * Hace uso del patron Command para ejecutar solicitudes de peticiones
  *
  */
 public class Controller {
 
     private Repository repository;
-    private WrapperObjectInterface user;
-    private WrapperObjectInterface video;
-    private Director director;
+    private User user;
+    private Video video;
+    private AbstractFactory factory;
     private Invoker invoker;
     private static Controller instance=null;
 
     /**
      * Constructor privado de la clase Controller donde se inicializa la clase Repository,
-     * la clase Director que implementa el patron Builder y la clase Invoker que implemeta
-     * el patron Command
+     * la clase Factory que implementa el patron AbstractFactory y la clase Invoker,
+     * utilizada para implemetar el patron Command
      *
-     * El constructor privado asegura que la clase solo tendra una instancia
+     * El constructor privado asegura que la clase solo tendra una instancia (patron Singleton)
      * La clase Controller proveera un punto global de acceso
-     * Implementa el patron Singleton
      */
     private Controller() {
         this.repository = Repository.getInstance();
-        this.director = new Director(new Builder1());
-        this.invoker = new Invoker(new Command1(new Receiver()));
+        this.factory = new Factory();
+        this.invoker = new Invoker(new Command1(new Receiver(this)));
 
     }
 
@@ -62,7 +58,7 @@ public class Controller {
     }
 
     /**
-     * Hace uso del patron Builder para crear un objeto de tipo User
+     * Delega en la clase Factory la creacion de un objeto de tipo User
      * Añade el objeto creado al Repository
      *
      * @param name, nombre del usuario, parametro del constructor de la clase User
@@ -71,59 +67,92 @@ public class Controller {
      * @throws Exception
      */
     public void createUser(String name, String surname, String password) throws Exception {
-        this.user = director.constructUser(name, surname, password);
-        repository.addUser((User) user);
+        this.user = factory.createUser(name, surname, password);
+        repository.addUser(this.user);
     }
 
     /**
-     * Hace uso del patron Builder para crear un objeto de tipo Video
+     * Delega en la clase Factory la creacion de un objeto de tipo Video
      *
-     * Añade el objeto creado a un listado de objetos Video asociados
-     * a un usuario creado previamente
+     * Hace uso del patron Command para añadir el objeto creado a un listado
+     * de objetos Video asociados a un usuario
      *
      * @param url, url del video, parametro del constructor de la clase Video
      * @param tittle, titulo del video, parametro del constructor de la clase Video
      */
-    public void createVideo(String url, String tittle){
-        this.video = director.constructVideo(url, tittle);
-        ((UserInterface)this.user).addVideoUser((Video) video);
+    public boolean createVideo(String url, String tittle){
+        boolean videoCreated=false;
+        if(!repository.isUserVideoRepited(this.user,url, tittle)){
+            this.video = factory.createVideo(url, tittle);
+            addUserVideo();
+            videoCreated=true;
+        }
+
+        return videoCreated;
     }
 
     /**
      * Hace uso del patron Command para añadir una etiqueta de tipo String a un video
-     * creado previamente
      *
      * @param tag, etiqueta del video
      */
-    public void executeOperationAddVideoTag(String tag){
-        invoker.operationAddVideoTag(this.video,tag);
+    public void addTagVideo(String tag){
+
+        invoker.addTagVideo(this.video,tag);
+    }
+
+    public void addTagVideo(String tag, Video video){
+
+        invoker.addTagVideo(video,tag);
     }
 
     /**
-     * Hace uso del patron Command para mostrar por consola los videos asociados a un usuario concreto
+     * Delega en el patron Command la peticion de mostrar por consola los videos asociados a un usuario concreto
      */
-    public void executeOperationShowInfo(){
-        invoker.operationShowInfo(this.user);
+    public void showInfoVideos(){
+
+        invoker.showInfoVideos(this.user);
+    }
+
+    /**
+     * Delega en el patron Command la peticion de añadir un video a un listado
+     * de objetos Video asociados a un usuario
+     */
+    public void addUserVideo(){
+
+        invoker.addUserVideo(this.video,this.user);
+    }
+
+    /**
+     * Delega en el patron Command la peticion de mostrar por consola el numero de videos que va creando el usuario
+     */
+    public void getNumberOfVideos(){
+        invoker.getNumberOfVideos();
     }
 
     /**
      * Retorna el objeto tipo User que esta actualmente en memoria
      *
-     * @return un objeto que implementa la interface de tipo WrapperObjectInterface,
-     * en este caso un objeto tipo User
+     * @return un objeto tipo User
      */
-    public WrapperObjectInterface getUser() {
+    public User getUser() {
+
         return this.user;
     }
 
     /**
      * Retorna el objeto tipo Video que esta actualmente en memoria
      *
-     * @return un objeto que implementa la interface de tipo WrapperObjectInterface,
-     * en este caso un objeto tipo Video
+     * @return un objeto tipo Video
      */
-    public WrapperObjectInterface getVideo() {
+    public Video getVideo() {
+
         return this.video;
+    }
+
+    public Video getVideo(User user,String url, String tittle){
+
+        return repository.getVideo(user,url,tittle);
     }
 
 }

@@ -1,11 +1,9 @@
 package com.videos.project.domain;
 
-import com.videos.project.application.builder.VideoInterface;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Video implements VideoInterface {
+public class Video{
     private String url;
     private String tittle;
     private List<String> tags = new ArrayList<>();
@@ -15,22 +13,24 @@ public class Video implements VideoInterface {
         this.tittle = tittle;
     }
 
-    @Override
-    public void addVideoTag(String tag) {
+    public void addTag(String tag) {
 
         this.tags.add(tag);
     }
 
     public String getUrl() {
-        return url;
+
+        return this.url;
     }
 
     public String getTittle() {
-        return tittle;
+
+        return this.tittle;
     }
 
     public List<String> getTags() {
-        return tags;
+
+        return this.tags;
     }
 
     @Override

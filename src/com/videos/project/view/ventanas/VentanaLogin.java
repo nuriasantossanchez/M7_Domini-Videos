@@ -104,7 +104,7 @@ public class VentanaLogin extends JFrame implements ActionListener {
 				controller.createUser(textName.getText(),textSurname.getText(),textPassword.getText());
 			}catch (EntradaDeDatosEnBlancoException ex) {
 				JOptionPane.showMessageDialog(null,
-						"Rellene Todos los Datos, por favor", "Campos Vacios No Permitidos",
+						"Rellene los Datos Solicitados, por favor", "Campos Vacios No Permitidos",
 						JOptionPane.WARNING_MESSAGE);
 			}catch (Exception ex) {
 				JOptionPane.showMessageDialog(null,
@@ -112,7 +112,7 @@ public class VentanaLogin extends JFrame implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				if(null!=controller.getUser()) {
-					this.controller.executeOperationShowInfo();
+					this.controller.showInfoVideos();
 					this.setVisible(false);
 					VentanaVideos videos = new VentanaVideos(controller, controller.getUser());
 					videos.setVisible(true);

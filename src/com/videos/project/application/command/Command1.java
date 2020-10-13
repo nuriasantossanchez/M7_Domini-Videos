@@ -4,13 +4,13 @@ import com.videos.project.domain.User;
 import com.videos.project.domain.Video;
 
 /**
- *  Clase de la capa Application, utilizada para implementar el patron Command
+ *  Clase de la capa Application, se utiliza para implementar el patron Command
  *
  *  Esta clase implementa la interfaz Command por lo que esta obligada a implementar los metodos
  *  que expone la interfaz
  *
- *  La interfaz Command encapsula las distintas peticiones, a traves de cuyas implementaciones
- *  se puede ejecutar una solicitud
+ *  La interfaz Command encapsula las distintas peticiones, la implementacion de
+ *  estas peticiones permiten ejecutar una solicitud
  *
  */
 public class Command1 implements Command {
@@ -29,12 +29,10 @@ public class Command1 implements Command {
     }
 
     /**
-     * Realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
-     * en este caso, actionShowInfo(user)
+     * Metodo que realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
+     * en este caso, listarVideos()
      *
-     * @param user, cualquier objeto que implemente la interface WrapperObjectInterface
-     *              o cualquier otra interface que extienda a WrapperObjectInterface,
-     *              en este caso, objeto de tipo User
+     * @param user, objeto de tipo User
      */
     @Override
     public void listarVideos(User user) {
@@ -42,12 +40,27 @@ public class Command1 implements Command {
         receiver.listarVideos(user);
     }
 
+    /**
+     * Metodo que realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
+     * en este caso, addUserVideo()
+     *
+     * @param user, objeto de tipo User
+     * @param video, objeto de tipo Video
+     */
     @Override
     public void addUserVideo(User user, Video video) {
         receiver.addUserVideo(user, video);
 
     }
 
+    /**
+     * Metodo que realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
+     * en este caso, getNumberOfUserVideos()
+     *
+     * @param user, objeto de tipo User
+     * @return un entero que reprenseta el numero de videos creados por un usuario
+     *
+     */
     @Override
     public int getNumberOfUserVideos(User user) {
 
@@ -55,25 +68,30 @@ public class Command1 implements Command {
 
     }
 
+    /**
+     * Metodo que realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
+     * en este caso, matchUrl()
+     *
+     * @param url, String que representa la url que se quiere checkear
+     * @return true, si la url cumple con el patron de formato especificado,
+     *         false en caso contrario
+     */
     @Override
     public boolean matchUrl(String url) {
         return receiver.matchUrl(url);
     }
 
     /**
-     * Realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
-     * en este caso, actionAddVideoTag(user)
-     *  @param video, cualquier objeto que implemente la interface WrapperObjectInterface
-     *               o cualquier otra interface que extienda a WrapperObjectInterface,
-     *               en este caso, objeto de tipo Video
+     * Metodo que realiza una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar una accion,
+     * en este caso, addTagVideo()
      *
-     * @param tag String que representa una etiqueta que sera añadida a un video en concreto
+     * @param video, objeto de tipo Video
+     * @param tag String que representa la etiqueta que sera añadida a un video concreto
      */
     @Override
     public void addTagVideo(String tag, Video video) {
         receiver.addTagVideo(tag, video);
 
     }
-
 
 }

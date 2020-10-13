@@ -15,58 +15,69 @@ import java.util.regex.Pattern;
  */
 public class Receiver {
 
-    private Repository repository = Repository.getInstance();
-
 
     public Receiver(){
 
     }
 
     /**
-     * Accede a un usuario del Repository y muestra la info de ese usuario y sus videos asociados
+     * Metodo que accede al repositorio para mostrar el listado de videos asociados a un usuario determinado
      *
-     * @param user, cualquier objeto que implemente la interface WrapperObjectInterface
-     *              o cualquier otra interface que extienda a WrapperObjectInterface,
-     *              en este caso, objeto de tipo User, que implementa la interface
-     *              UserInterface que extiende a WrapperObjectInterface
+     * @param user, objeto de tipo User
+     *
      */
     public void listarVideos(User user) {
         System.out.println(user.toString());
-        if (!this.repository.getUserVideos(user).isEmpty()) {
+        if (!Repository.getInstance().getUserVideos(user).isEmpty()) {
             System.out.println("\nVideos de '" + (user).getName() + '\'');
-            for (Video video : this.repository.getUserVideos(user)) {
+            for (Video video : Repository.getInstance().getUserVideos(user)) {
                 System.out.println(video.toString());
             }
-
-        } else {
-            getNumberOfUserVideos(user);
         }
     }
 
     /**
-     * Añade una etiqueta a un video determinado
-     *  @param video, cualquier objeto que implemente la interface WrapperObjectInterface
-     *               o cualquier otra interface que extienda a WrapperObjectInterface,
-     *               en este caso, objeto de tipo Video, que implementa la interface
-     *               VideoInterface que extiende a WrapperObjectInterface
+     *  Metodo que añade una nueva etiqueta al listado de etiquetas de un video determinado
      *
-     * @param tag String que representa una etiqueta que sera añadida a un video en concreto
+     * @param video, objeto de tipo Video
+     * @param tag String que representa la etiqueta que sera añadida al listado de etiquetas
+     *            de un video concreto
      */
     public void addTagVideo(String tag, Video video) {
 
         video.addTag(tag);
     }
 
+    /**
+     * Metodo que añade un nuevo video al listado de videos de un usuario
+     *
+     * @param user, objeto de tipo User
+     * @param video, objeto de tipo Video
+     */
     public void addUserVideo(User user, Video video) {
         user.addVideo(video);
 
     }
 
+    /**
+     * Metodo que devuelve el numero de videos que va creando un usuario
+     *
+     * @param user, objeto de tipo User
+     * @return un entero que reprenseta el numero de videos creados por el usuario
+     */
     public int getNumberOfUserVideos(User user) {
 
         return user.getVideos().size();
     }
 
+    /**
+     * Metodo que con una expresion regular comprueba si una url cumple con el
+     * patron de formato especificado
+     *
+     * @param url, String que representa la url que se quiere checkear
+     * @return true, si la url cumple con el patron de formato especificado,
+     *         false en caso contrario
+     */
     public boolean matchUrl(String url) {
         boolean urlOk = false;
         final String regex = "^(http:\\/\\/www\\.|https:\\/\\/www\\.|www\\.)" +

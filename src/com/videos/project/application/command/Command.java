@@ -4,7 +4,7 @@ import com.videos.project.domain.User;
 import com.videos.project.domain.Video;
 
 /**
- * Interface de la capa Application, utilizada para implementar el patron Command
+ * Interface de la capa Application, se utiliza para implementar el patron Command
  *
  * Encapsula ciertas peticiones en un objeto con el fin de desacoplar
  * el objeto que solicita una peticion, de la peticon en si

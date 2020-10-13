@@ -30,9 +30,14 @@ public class Controller {
     private static Controller instance=null;
 
     /**
-     * Constructor privado de la clase Controller donde se inicializa la clase Repository,
-     * la clase Factory que implementa el patron AbstractFactory y la clase Invoker,
-     * utilizada para implemetar el patron Command
+     * Constructor privado de la clase Controller
+     *
+     * Inicializa la clase Repository que alamcena la informacion de usuarios creados
+     * y sus videos asociados
+     *
+     * Inicializa la clase Factory que implementa el patron AbstractFactory
+     *
+     * Inicializa la clase Invoker, que se utiliza para implemetar el patron Command
      *
      * El constructor privado asegura que la clase solo tendra una instancia (patron Singleton)
      * La clase Controller proveera un punto global de acceso
@@ -57,9 +62,13 @@ public class Controller {
 
     }
 
+    //Todo
     /**
      * Delega en la clase Factory la creacion de un objeto de tipo User
-     * Añade el objeto creado al Repository
+     *
+     * Añade el objeto creado al Repository, en caso de que sea un nuevo usuario
+     * Si el usuario ya existe, inicicaliza la instacia de usuario que esta actualmente
+     * en memoria con el valor recuperado del repositorio
      *
      * @param name, nombre del usuario, parametro del constructor de la clase User
      * @param surname, apellido del usuario, parametro del constructor de la clase User
@@ -75,15 +84,20 @@ public class Controller {
         }
     }
 
+    //Todo
     /**
      * Delega en la clase Factory la creacion de un objeto de tipo Video
+     * No permite crear videos iguales, con la misma url y el mismo titulo
      *
-     * Hace uso del patron Command para añadir el objeto creado a un listado
-     * de objetos Video asociados a un usuario
+     * Hace uso del patron Command para añadir el nuevo objeto creado a un
+     * listado de objetos de tipo Video asociados a un usuario
      *
      * @param url, url del video, parametro del constructor de la clase Video
      * @param tittle, titulo del video, parametro del constructor de la clase Video
+     * @return true si se ha creado un nuevo video y añadido al listado de videos de
+     *         un usuario, false si el video ya existe en el listado
      */
+
     public boolean createVideo(String url, String tittle){
         boolean isVideoCreated=false;
         if(!repository.isUserVideoExisting(this.user,url, tittle)){
@@ -94,14 +108,22 @@ public class Controller {
         return isVideoCreated;
     }
 
+    /**
+     * Hace uso del patron Command para checkear si una matricula cumple con el
+     * patron de formato especificado
+     *
+     * @param url, String que representa la url que se quiere checkear
+     * @return true, si la url cumple con el patron de formato especificado,
+     *         false en caso contrario
+     */
     public boolean matchUrl(String url) {
         return invoker.matchUrl(url);
     }
 
     /**
-     * Hace uso del patron Command para añadir una etiqueta de tipo String a un video
+     * Hace uso del patron Command para añadir una etiqueta a un video
      *
-     * @param tag, etiqueta del video
+     * @param tag String que representa la etiqueta que sera añadida a un video concreto
      */
     public void addTagVideo(String tag, Video video){
 
@@ -109,7 +131,8 @@ public class Controller {
     }
 
     /**
-     * Delega en el patron Command la peticion de mostrar por consola los videos asociados a un usuario concreto
+     * Delega en el patron Command la peticion de mostrar por consola
+     * los videos asociados a un usuario determinado
      */
     public void listarVideos(){
 
@@ -117,8 +140,8 @@ public class Controller {
     }
 
     /**
-     * Delega en el patron Command la peticion de añadir un video a un listado
-     * de objetos Video asociados a un usuario
+     * Delega en el patron Command la peticion de añadir un nuevo video a un listado
+     * de objetos Video asociados a un usuario determinado
      */
     public void addUserVideo(){
 
@@ -126,7 +149,8 @@ public class Controller {
     }
 
     /**
-     * Delega en el patron Command la peticion de mostrar por consola el numero de videos que va creando el usuario
+     * Delega en el patron Command la peticion de mostrar por consola el numero de videos
+     * que va creando un usuario
      */
     public void getNumberOfUserVideos(User user){
         int numberOfUserVideos = invoker.getNumberOfUserVideos(user);;
@@ -147,6 +171,7 @@ public class Controller {
      * @return un objeto tipo User
      */
     public User getUser() {
+
         return this.user;
     }
 
@@ -160,6 +185,15 @@ public class Controller {
         return this.video;
     }
 
+    /**
+     * Retorna un objeto de tipo Video que forma parte del listado de videos creados por un usuario
+     *
+     * @param user objeto tipo User
+     * @param url String que representa la url de un video concreto
+     * @param tittle String que representa el titulo de un video concreto
+     * @return un objeto tipo Video cuya url y titulo coincide con la url y tittle pasados como parametro
+     *
+     */
     public Video getVideo(User user,String url, String tittle){
 
         return repository.getVideo(user,url,tittle);

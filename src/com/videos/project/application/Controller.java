@@ -40,7 +40,7 @@ public class Controller {
     private Controller() {
         this.repository = Repository.getInstance();
         this.factory = new Factory();
-        this.invoker = new Invoker(new Command1(new Receiver(this)));
+        this.invoker = new Invoker(new Command1(new Receiver()));
 
     }
 
@@ -67,8 +67,12 @@ public class Controller {
      * @throws Exception
      */
     public void createUser(String name, String surname, String password) throws Exception {
-        this.user = factory.createUser(name, surname, password);
-        repository.addUser(this.user);
+        if(!repository.isUserExisting(name, surname, password)){
+            this.user = factory.createUser(name, surname, password);
+            repository.addUser(this.user);
+        }else{
+            this.user=repository.getUser();
+        }
     }
 
     /**
@@ -81,14 +85,17 @@ public class Controller {
      * @param tittle, titulo del video, parametro del constructor de la clase Video
      */
     public boolean createVideo(String url, String tittle){
-        boolean videoCreated=false;
-        if(!repository.isUserVideoRepited(this.user,url, tittle)){
+        boolean isVideoCreated=false;
+        if(!repository.isUserVideoExisting(this.user,url, tittle)){
             this.video = factory.createVideo(url, tittle);
             addUserVideo();
-            videoCreated=true;
+            isVideoCreated=true;
         }
+        return isVideoCreated;
+    }
 
-        return videoCreated;
+    public boolean matchUrl(String url) {
+        return invoker.matchUrl(url);
     }
 
     /**
@@ -96,22 +103,17 @@ public class Controller {
      *
      * @param tag, etiqueta del video
      */
-    public void addTagVideo(String tag){
-
-        invoker.addTagVideo(this.video,tag);
-    }
-
     public void addTagVideo(String tag, Video video){
 
-        invoker.addTagVideo(video,tag);
+        invoker.addTagVideo(tag, video);
     }
 
     /**
      * Delega en el patron Command la peticion de mostrar por consola los videos asociados a un usuario concreto
      */
-    public void showInfoVideos(){
+    public void listarVideos(){
 
-        invoker.showInfoVideos(this.user);
+        invoker.listarVideos(this.user);
     }
 
     /**
@@ -120,14 +122,23 @@ public class Controller {
      */
     public void addUserVideo(){
 
-        invoker.addUserVideo(this.video,this.user);
+        invoker.addUserVideo(this.user, this.video);
     }
 
     /**
      * Delega en el patron Command la peticion de mostrar por consola el numero de videos que va creando el usuario
      */
-    public void getNumberOfVideos(){
-        invoker.getNumberOfVideos();
+    public void getNumberOfUserVideos(User user){
+        int numberOfUserVideos = invoker.getNumberOfUserVideos(user);;
+
+        if(numberOfUserVideos !=1){
+            System.out.println('\''+ getUser().getName()+'\'' + " ha creado "
+                    + numberOfUserVideos +" videos");
+        }
+        else{
+            System.out.println('\''+ getUser().getName()+'\'' + " ha creado "
+                    + numberOfUserVideos +" video");
+        }
     }
 
     /**
@@ -136,7 +147,6 @@ public class Controller {
      * @return un objeto tipo User
      */
     public User getUser() {
-
         return this.user;
     }
 

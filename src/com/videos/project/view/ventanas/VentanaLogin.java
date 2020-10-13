@@ -8,34 +8,34 @@ import java.awt.event.ActionListener;
 
 /**
  * Clase de la capa View
+ * Implementa el patron Singleton
  *
- * Muestra un formulario de Login que permite la creacion de un Usuario
- * El formulario no permite campos vacios
+ * Muestra un formulario de Login que permite la creacion de un usuario
+ * El formulario no permite campos vacios, y lanza una excepcion de tipo
+ * EntradaDeDatosEnBlancoException
+ *
  */
 public class VentanaLogin extends JFrame implements ActionListener {
 
 	private JLabel labelTitulo;
 	private JTextField textName , textSurname, textPassword;
 	private JLabel name, surname, password;
-	private JButton botonLogin, botonExit;
+	private JButton botonLogin;
 	private Controller controller;
+	private static VentanaLogin instance;
 
 	/**
-	 * Constructor de la clase donde se inicializan todos los componentes de la
-	 * ventana de Login
+	 * Constructor privado de la clase donde se inicializan todos los componentes
+	 * de la ventana de login
 	 */
-	public VentanaLogin(Controller controller) {
+	private VentanaLogin(Controller controller) {
 		this.controller= controller;
 
 		botonLogin = new JButton();
-		botonLogin.setBounds(90, 250, 100, 30);
+		botonLogin.setBounds(120, 250, 100, 30);
 		botonLogin.setText("Login");
 		add(botonLogin);
 
-		botonExit = new JButton();
-		botonExit.setBounds(200, 250, 100, 30);
-		botonExit.setText("Salir");
-		add(botonExit);
 
 		labelTitulo = new JLabel();
 		labelTitulo.setText("LOGATE PARA ACCEDER A TUS VIDEOS");
@@ -70,7 +70,6 @@ public class VentanaLogin extends JFrame implements ActionListener {
 		add(textPassword);
 
 		botonLogin.addActionListener(this);
-		botonExit.addActionListener(this);
 
 		setSize(380, 380);
 		setTitle("USER LOGIN");
@@ -81,8 +80,31 @@ public class VentanaLogin extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Realiza la accion de crear un usuario o salir de la aplicacion, en funcion
-	 * del evento de ususario capturado
+	 * Metodo que representa el punto global de acceso a la instancia unica de la clase VentanaLogin
+	 *
+	 * @param controller, objeto de tipo Controller
+	 * @return instacia unica de la clase VentanaLogin
+	 */
+	public static VentanaLogin getInstance(Controller controller){
+		if (instance==null){
+			instance=new VentanaLogin(controller);
+		}
+		return instance;
+
+	}
+
+	/**
+	 * Limpia el formulario de login de usuario
+	 */
+	private void limpiar() {
+		textName.setText("");
+		textSurname.setText("");
+		textPassword.setText("");
+	}
+
+	//Todo
+	/**
+	 * Realiza la accion de crear un usuario
 	 *
 	 * El formulario de creacion de un usuario no permite campos vacios
 	 *
@@ -112,15 +134,12 @@ public class VentanaLogin extends JFrame implements ActionListener {
 						JOptionPane.ERROR_MESSAGE);
 			} finally {
 				if(null!=controller.getUser()) {
-					this.controller.showInfoVideos();
+					limpiar();
 					this.setVisible(false);
-					VentanaVideos videos = new VentanaVideos(controller, controller.getUser());
+					VentanaVideos videos = new VentanaVideos(controller);
 					videos.setVisible(true);
 				}
 			}
-		}
-		if (e.getSource() == botonExit) {
-			System.exit(0);
 		}
 	}
 

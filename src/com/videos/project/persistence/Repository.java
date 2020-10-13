@@ -10,6 +10,7 @@ public class Repository {
 
     private static Repository instance=null;
     private static List<User> users = new ArrayList<>();
+    private User user = null;
 
     private Repository(){
 
@@ -51,18 +52,36 @@ public class Repository {
         return userVideos;
     }
 
-    public boolean isUserVideoRepited(User user, String url, String tittle) {
-        boolean videoRepeted=false;
-        for (Video vdo: getUserVideos(user)){
-            if(vdo.getUrl().equals(url) && vdo.getTittle().equals(tittle)){
-                videoRepeted=true;
+    public boolean isUserExisting(String name, String surname, String password) {
+        boolean isUserExisting=false;
+        for (User usr: getAllUsers()){
+            if(usr.getName().equals(name)
+                    && usr.getSurname().equals(surname)
+                    && usr.getPassword().equals(password)){
+                this.user=usr;
+                isUserExisting=true;
                 break;
             }
         }
-        return videoRepeted;
+        return isUserExisting;
     }
 
-    public Video getVideo(User user,String url, String tittle){
+    public boolean isUserVideoExisting(User user, String url, String tittle) {
+        boolean isUserVideoExisting=false;
+        for (Video vdo: getUserVideos(user)){
+            if(vdo.getUrl().equals(url) && vdo.getTittle().equals(tittle)){
+                isUserVideoExisting=true;
+                break;
+            }
+        }
+        return isUserVideoExisting;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Video getVideo(User user, String url, String tittle){
         Video video=null;
         for (Video vdo: getUserVideos(user)){
             if(vdo.getUrl().equals(url) && vdo.getTittle().equals(tittle)){

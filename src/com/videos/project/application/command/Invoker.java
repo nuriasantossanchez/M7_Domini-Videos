@@ -36,9 +36,9 @@ public class Invoker {
      *              o cualquier otra interface que extienda a WrapperObjectInterface,
      *              en este caso, objeto de tipo User
      */
-    public void showInfoVideos(User user) {
+    public void listarVideos(User user) {
 
-        command.showInfoVideos(user);
+        command.listarVideos(user);
     }
 
     /**
@@ -47,22 +47,27 @@ public class Invoker {
      * Hace una llamada al metodo executeActionAddVideoTag() de la interface Command
      * a traves del cual, el objeto que imlementa la intreface, objeto Command1, realiza
      * una operacion sobre otro objeto, objeto Receiver, encargado de ejecutar la accion
-     *
-     * @param video, cualquier objeto que implemente la interface WrapperObjectInterface
+     *  @param video, cualquier objeto que implemente la interface WrapperObjectInterface
      *               o cualquier otra interface que extienda a WrapperObjectInterface,
      *               en este caso, objeto de tipo Video
      *
      * @param tag String que representa una etiqueta que sera añadida a un video en concreto
      */
-    public void addTagVideo(Video video, String tag) {
+    public void addTagVideo(String tag, Video video) {
         command.addTagVideo(tag, video);
     }
 
-    public void addUserVideo(Video video, User user){
-        command.addUserVideo(video, user);
+    public void addUserVideo(User user, Video video){
+
+        command.addUserVideo(user, video);
     }
 
-    public void getNumberOfVideos() {
-        command.getNumberOfVideos();
+    public int getNumberOfUserVideos(User user) {
+
+        return command.getNumberOfUserVideos(user);
+    }
+
+    public boolean matchUrl(String url) {
+        return command.matchUrl(url);
     }
 }

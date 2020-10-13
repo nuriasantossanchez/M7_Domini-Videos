@@ -14,12 +14,14 @@ import com.videos.project.domain.Video;
  *
  */
 public interface Command {
-    void showInfoVideos(User user);
+    void listarVideos(User user);
 
     void addTagVideo(String tag, Video video);
 
-    void addUserVideo(Video video, User user);
+    void addUserVideo(User user, Video video);
 
-    void getNumberOfVideos();
+    int getNumberOfUserVideos(User user);
+
+    boolean matchUrl(String url);
 
 }

@@ -37,20 +37,27 @@ public class Command1 implements Command {
      *              en este caso, objeto de tipo User
      */
     @Override
-    public void showInfoVideos(User user) {
+    public void listarVideos(User user) {
 
-        receiver.showInfoVideos(user);
+        receiver.listarVideos(user);
     }
 
     @Override
-    public void addUserVideo(Video video, User user) {
-        receiver.addUserVideo(video, user);
+    public void addUserVideo(User user, Video video) {
+        receiver.addUserVideo(user, video);
 
     }
 
     @Override
-    public void getNumberOfVideos() {
-        receiver.getNumberOfVideos();
+    public int getNumberOfUserVideos(User user) {
+
+        return receiver.getNumberOfUserVideos(user);
+
+    }
+
+    @Override
+    public boolean matchUrl(String url) {
+        return receiver.matchUrl(url);
     }
 
     /**

@@ -225,9 +225,9 @@ public class VentanaVideos extends JFrame implements ActionListener {
                 if(!controller.matchUrl(textUrl.getText().trim())){
                     JOptionPane.showMessageDialog(null,
                             "Introduzca una URL con un Formato Correcto, por favor\n\n" +
-                                    "https://www.ejemplo.com\n" +
-                                    "http://www.ejemplo.com\n" +
-                                    "www.ejemplo.com\n", "Formato de URL No Permitido",
+                                    "https://www.ejemploURL.com\n" +
+                                    "http://www.ejemploURL.com\n" +
+                                    "www.ejemploURL.com\n", "Formato de URL No Permitido",
                             JOptionPane.WARNING_MESSAGE);
                     limpiar();
                 } else if (!controller.createVideo(textUrl.getText(), textTittle.getText())) {

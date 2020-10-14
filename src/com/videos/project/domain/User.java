@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Clase de la capa Domain
+ *
+ * Representa a un usuario identificado por su nombre, apellido y password
+ *
+ * Contiene un listado de objetos de tipo Video, con los videos creados por
+ * dicho usuario
+ *
+ */
 public class User {
 
     private String name;
@@ -23,27 +32,22 @@ public class User {
     }
 
     public void addVideo(Video video) {
-
         this.videos.add(video);
     }
 
     public String getName() {
-
         return this.name;
     }
 
     public String getSurname() {
-
         return this.surname;
     }
 
     public String getPassword() {
-
         return this.password;
     }
 
     public List<Video> getVideos() {
-
         return this.videos;
     }
 

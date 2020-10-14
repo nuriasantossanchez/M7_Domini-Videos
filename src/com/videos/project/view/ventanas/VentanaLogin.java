@@ -11,8 +11,8 @@ import java.awt.event.ActionListener;
  * Implementa el patron Singleton
  *
  * Muestra un formulario de Login que permite la creacion de un usuario
- * El formulario no permite campos vacios, y lanza una excepcion de tipo
- * EntradaDeDatosEnBlancoException
+ * El formulario no permite campos vacios y lanza una excepcion de tipo
+ * EntradaDeDatosEnBlancoException si no se informan todos los datos solicitados
  *
  */
 public class VentanaLogin extends JFrame implements ActionListener {
@@ -25,8 +25,12 @@ public class VentanaLogin extends JFrame implements ActionListener {
 	private static VentanaLogin instance;
 
 	/**
-	 * Constructor privado de la clase donde se inicializan todos los componentes
-	 * de la ventana de login
+	 * Constructor privado de la clase, donde se inicializan todos los componentes de la
+	 * ventana de login
+	 *
+	 * Hace uso de la clase Controller, pasada como parametro
+	 *
+	 * @param controller, instancia de la clase Controller
 	 */
 	private VentanaLogin(Controller controller) {
 		this.controller= controller;
@@ -80,9 +84,11 @@ public class VentanaLogin extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * Metodo que representa el punto global de acceso a la instancia unica de la clase VentanaLogin
+	 * Metodo que representa el punto global de acceso a la instancia unica
+	 * de la clase VentanaLogin
 	 *
-	 * @param controller, objeto de tipo Controller
+	 * @param controller, objeto de tipo Controller, parametro del constructor
+	 *                    de la clase VentanaLogin
 	 * @return instacia unica de la clase VentanaLogin
 	 */
 	public static VentanaLogin getInstance(Controller controller){
@@ -102,21 +108,18 @@ public class VentanaLogin extends JFrame implements ActionListener {
 		textPassword.setText("");
 	}
 
-	//Todo
 	/**
-	 * Realiza la accion de crear un usuario
+	 * Realiza la accion de crear un nuevo user o logar a un user ya existente
 	 *
-	 * El formulario de creacion de un usuario no permite campos vacios
+	 * El formulario de creacion de un usuario o login no permite campos vacios
 	 *
-	 * Una vez creado un usuario se muestra por consola la info del usuario, se oculta
-	 * la ventana con el formulario de Login y se muestra la ventana de creacion
-	 * de Videos para ese usuario
+	 * Una vez logado el usuario se oculta la ventana con el formulario de Login
+	 * y se muestra la ventana de creacion de Videos para ese usuario
 	 *
 	 * @param e, evento generado por la accion click del usuario sobre el componente JButton
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
 		if (e.getSource() == botonLogin) {
 			try {
 				if (textName.getText().trim().isEmpty() || textSurname.getText().trim().isEmpty()

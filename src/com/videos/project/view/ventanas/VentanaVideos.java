@@ -15,9 +15,9 @@ import java.util.List;
 /**
  * Clase de la capa View
  * <p>
- * Muestra un formulario para la creacion de videos asociados a un usuario
- * El formulario no permite campos vacios, y lanza una excepcion de tipo
- * EntradaDeDatosEnBlancoException
+ * Muestra un formulario para la creacion de videos asociados al usuario logado
+ * El formulario no permite campos vaciosy lanza una excepcion de tipo
+ * EntradaDeDatosEnBlancoException si no se informan todos los datos solicitados
  *
  * Muestra la info de cada nuevo video en un componente JTable
  *
@@ -36,10 +36,13 @@ public class VentanaVideos extends JFrame implements ActionListener {
     JScrollPane scrollTabla;
     private Controller controller;
 
-
     /**
-     * Constructor de la clase donde se inicializan todos los componentes de la
+     * Constructor de la clase, donde se inicializan todos los componentes de la
      * ventana de videos
+     *
+     * Hace uso de la clase Controller, pasada como parametro
+     *
+     * @param controller, instancia de la clase Controller
      */
     public VentanaVideos(Controller controller) {
         this.controller = controller;
@@ -107,13 +110,15 @@ public class VentanaVideos extends JFrame implements ActionListener {
 
         /**
          * Añade el evento MouseListener a la JLabel linkTags
-         * Esta JLabel es tratada como un link o boton
+         *
+         * Esta JLabel es tratada como un link o boton y aporta la
+         * funcionalidad de añadir tags o etiquetas a los videos creados
          *
          */
         addMouseListenerLinkTags();
 
         /**
-         * Muestra en un JTable los videos que va creando el usuario
+         * Muestra en un JTable los videos creados por el usuario
          */
         mostrarVideos();
         limpiar();
@@ -135,9 +140,9 @@ public class VentanaVideos extends JFrame implements ActionListener {
     }
 
     /**
-     * Permite el llenado de un JTable con la info de los videos que va creando el usuario
+     * Permite el llenado de un JTable con la info de los videos creados por el usuario
      *
-     * Captura el evento click del JTable para permitir añadir etiquetas/tags a cualquiera
+     * Captura el evento click del JTable para permitir añadir etiquetas o tags a cualquiera
      * de los videos ya creados
      */
     public void mostrarVideos() {
@@ -176,7 +181,7 @@ public class VentanaVideos extends JFrame implements ActionListener {
      * La segunda dimension(y) es fija y representa la cabecera del JTable, con la info que
      * se muestra de cada video (url, titulo y tags)
      *
-     * @return
+     * @return una matriz alimenta los datos del componente JTable
      */
     private String[][] obtieneMarizVideos() {
         List<Video> videoList=controller.getUser().getVideos();
@@ -272,7 +277,7 @@ public class VentanaVideos extends JFrame implements ActionListener {
      *
      * El metodo inputDialogAddTag() muestra recursivamente un InputDialog
      * para la entrada de datos de un String, que representa una etiqueta o tag
-     * que es añadida a un video concreto
+     * que es añadida a un video determinado
      *
      */
     private void addMouseListenerLinkTags() {
@@ -292,10 +297,10 @@ public class VentanaVideos extends JFrame implements ActionListener {
 
     /**
      * Muestra recursivamente un InputDialog para la entrada de datos de un String,
-     * utilizado para la creacion de etiquetas o tags de un video concreto
+     * utilizado para la creacion de etiquetas o tags de un video determinado
      *
-     * La entrada de datos en blanco no es permtida, y lanza una excepcion de tipo
-     * EntradaDeDatosEnBlancoException
+     * La entrada de datos en blanco no es permtida y lanza una excepcion de tipo
+     * EntradaDeDatosEnBlancoException si no se informa el dato solicitado
      *
      * Este metodo se llama al hacer click en la etiqueta 'Crea tus Tags' que aparece
      * cada vez que un usuario crea un nuevo video y al hacer click en cualquier celda
@@ -314,7 +319,6 @@ public class VentanaVideos extends JFrame implements ActionListener {
             mostrarVideos();
             tag = JOptionPane.showInputDialog(null, "Crea un Tag mas para tu Video", "CREA TUS TAGS", JOptionPane.QUESTION_MESSAGE);
         }
-
         linkTags.setVisible(false);
     }
 

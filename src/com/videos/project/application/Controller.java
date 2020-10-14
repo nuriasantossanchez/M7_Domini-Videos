@@ -50,7 +50,8 @@ public class Controller {
     }
 
     /**
-     * Metodo que representa el punto global de acceso a la instancia unica de la clase Controller
+     * Metodo que representa el punto global de acceso a la instancia unica
+     * de la clase Controller
      *
      * @return instacia unica de la clase Controller
      */
@@ -62,7 +63,6 @@ public class Controller {
 
     }
 
-    //Todo
     /**
      * Delega en la clase Factory la creacion de un objeto de tipo User
      *
@@ -80,29 +80,29 @@ public class Controller {
             this.user = factory.createUser(name, surname, password);
             repository.addUser(this.user);
         }else{
-            this.user=repository.getUser();
+            this.user=repository.getCurrentUser();
         }
     }
 
-    //Todo
     /**
      * Delega en la clase Factory la creacion de un objeto de tipo Video
      * No permite crear videos iguales, con la misma url y el mismo titulo
      *
-     * Hace uso del patron Command para añadir el nuevo objeto creado a un
-     * listado de objetos de tipo Video asociados a un usuario
+     * Hace uso del patron Command para añadir el nuevo objeto creado al listado
+     * de objetos de tipo Video asociados a un usuario determinado, addUserVideo()
      *
      * @param url, url del video, parametro del constructor de la clase Video
      * @param tittle, titulo del video, parametro del constructor de la clase Video
-     * @return true si se ha creado un nuevo video y añadido al listado de videos de
-     *         un usuario, false si el video ya existe en el listado
+     * @return true si se ha creado un nuevo video y añadido al listado de videos del
+     *         usuario, false en caso contrario, si el video ya existe en el listado y por
+     *         tanto no se crea por ser repetido
      */
 
     public boolean createVideo(String url, String tittle){
         boolean isVideoCreated=false;
         if(!repository.isUserVideoExisting(this.user,url, tittle)){
             this.video = factory.createVideo(url, tittle);
-            addUserVideo();
+            this.addUserVideo();
             isVideoCreated=true;
         }
         return isVideoCreated;
@@ -140,8 +140,8 @@ public class Controller {
     }
 
     /**
-     * Delega en el patron Command la peticion de añadir un nuevo video a un listado
-     * de objetos Video asociados a un usuario determinado
+     * Delega en el patron Command la peticion de añadir un nuevo video a
+     * un listado de objetos Video asociados a un usuario determinado
      */
     public void addUserVideo(){
 
@@ -149,8 +149,10 @@ public class Controller {
     }
 
     /**
-     * Delega en el patron Command la peticion de mostrar por consola el numero de videos
-     * que va creando un usuario
+     * Delega en el patron Command la peticion de mostrar por consola el numero
+     * de videos que va creando un usuario
+     *
+     * @param user, objeto de tipo User
      */
     public void getNumberOfUserVideos(User user){
         int numberOfUserVideos = invoker.getNumberOfUserVideos(user);;
@@ -166,17 +168,16 @@ public class Controller {
     }
 
     /**
-     * Retorna el objeto tipo User que esta actualmente en memoria
+     * Retorna el objeto de tipo User que esta actualmente en memoria
      *
      * @return un objeto tipo User
      */
     public User getUser() {
-
         return this.user;
     }
 
     /**
-     * Retorna el objeto tipo Video que esta actualmente en memoria
+     * Retorna el objeto de tipo Video que esta actualmente en memoria
      *
      * @return un objeto tipo Video
      */
@@ -186,16 +187,18 @@ public class Controller {
     }
 
     /**
-     * Retorna un objeto de tipo Video que forma parte del listado de videos creados por un usuario
+     * Retorna un objeto de tipo Video que forma parte del listado de videos
+     * creados por un usuario determinado
      *
      * @param user objeto tipo User
-     * @param url String que representa la url de un video concreto
-     * @param tittle String que representa el titulo de un video concreto
-     * @return un objeto tipo Video cuya url y titulo coincide con la url y tittle pasados como parametro
+     * @param url String que representa la url de un video
+     * @param tittle String que representa el titulo de un video
+     * @return un objeto tipo Video cuya url y titulo coincide
+     *         con la url y tittle pasados como parametro,
+     *         null si el video no existe en el listado
      *
      */
     public Video getVideo(User user,String url, String tittle){
-
         return repository.getVideo(user,url,tittle);
     }
 

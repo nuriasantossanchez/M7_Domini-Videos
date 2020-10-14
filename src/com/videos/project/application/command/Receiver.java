@@ -8,7 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  Clase de la capa Application, utilizada para implementar el patron Command
+ *  Clase de la capa Application, se utiliza para implementar el patron Command
  *
  *  Se encarga de realizar las peticiones solicitadas
  *
